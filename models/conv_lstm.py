@@ -25,7 +25,7 @@ class ConvLSTMCell(nn.Module):
             bias: bool
                 Whether or not to add the bias
         """
-        
+
         super(ConvLSTMCell, self).__init__()
 
         self.height, self.width = in_size
@@ -70,7 +70,7 @@ class ConvLSTMCell(nn.Module):
 class ConvLSTM(nn.Module):
 
     def __init__(self, in_size, in_dim, h_dim, kernel_size, num_layers, **kwargs):
-        
+
         super(ConvLSTM, self).__init__()
 
         self._check_kernel_size_consistency(kernel_size)
@@ -93,7 +93,7 @@ class ConvLSTM(nn.Module):
 
         cell_list = []
         for i in range(0, self.num_layers):
-            cur_input_dim = self.input_dim if i == 0 else self.hidden_dim[i-1]
+            cur_input_dim = self.input_dim if i == 0 else self.hidden_dim[i - 1]
 
             cell_list.append(ConvLSTMCell(in_size=(self.height, self.width),
                                           in_dim=cur_input_dim,

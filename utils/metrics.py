@@ -53,5 +53,5 @@ def normalize_mat(input_mat, if_retain_last_dim=True):
     if if_retain_last_dim:
         norm_mat = np.moveaxis(norm_mat, -1, 1)  # => (n_times, n_features, n_rows, n_cols)
 
-    print('Shape of the normalized matrix = {}'.format(norm_mat.shape))
+    # print('Shape of the normalized matrix = {}'.format(norm_mat.shape))
     return norm_mat

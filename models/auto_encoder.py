@@ -2,45 +2,53 @@ from torch import nn
 import torch.nn.functional as F
 
 
-# a simple Auto-Encoder model
-
 class AutoEncoder(nn.Module):
+    """ a Vallina auto-encoder """
+    
+    def __init__(self, in_dim, en_h_dims, de_h_dims, **kwargs):
+        """
+        At least one encoded hidden layers and at least one decoded hidden layers
+        
+        Params:
+            in_dim: the number of dimensions of the input data
+            en_h_dims: encoder layers
+            de_h_dims: decoder layers 
+            Assert en_h_dims[-1] == de_h_dims[0]
 
-    def __init__(self, in_dim, en_h_dims, de_h_dims):
+        """
 
         super(AutoEncoder, self).__init__()
 
-        self.input_dim = in_dim
-        self.encoder_hidden_dims = en_h_dims
-        self.decoder_hidden_dims = de_h_dims
-
-        # input layer
-        self.in_layer = nn.Linear(self.input_dim, self.encoder_hidden_dims[0])
+        self.en_h_dims = [in_dim] + en_h_dims
+        self.de_h_dims = de_h_dims + [in_dim]
+        self.p_dropout = kwargs.get('p_dropout', 0.1)
 
         # encoding layers
         self.encoder = nn.ModuleList()
-        for k in range(len(self.encoder_hidden_dims) - 1):
-            self.encoder.append(nn.Linear(self.encoder_hidden_dims[k], self.encoder_hidden_dims[k + 1]))
+        for i in range(len(self.en_h_dims) - 1):
+            self.encoder.append(nn.Linear(self.en_h_dims[i], self.en_h_dims[i + 1]))
 
         # decoding layers
         self.decoder = nn.ModuleList()
-        for k in range(len(self.decoder_hidden_dims) - 1):
-            self.decoder.append(nn.Linear(self.decoder_hidden_dims[k], self.decoder_hidden_dims[k + 1]))
-
-        # output layer
-        self.out_layer = nn.Linear(self.decoder_hidden_dims[-1], self.input_dim)
+        for i in range(len(self.de_h_dims) - 1):
+            self.decoder.append(nn.Linear(self.de_h_dims[i], self.de_h_dims[i + 1]))
+        
+        self.dropout = nn.Dropout(p=self.p_dropout)
 
     def forward(self, input_data):
 
-        encoded = F.relu(self.in_layer(input_data))
+        en = input_data
 
-        for layer in self.encoder:
-            encoded = F.relu(layer(encoded))
+        for i, l in enumerate(self.encoder):
+            en = F.relu(l(en))
+#             en = l(en)
+#             if i < len(self.encoder) - 1:
+#                 en = F.relu(en)
 
-        decoded = encoded
-
-        for layer in self.decoder:
-            decoded = F.relu(layer(decoded))
-
-        decoded = self.out_layer(decoded)
-        return encoded, decoded
+        de = en
+        for i, l in enumerate(self.decoder):
+            de = l(de)
+            if i < len(self.decoder) - 1:
+                de = F.relu(de)
+                
+        return en, de
