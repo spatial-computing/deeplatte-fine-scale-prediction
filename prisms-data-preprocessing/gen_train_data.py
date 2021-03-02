@@ -1,16 +1,19 @@
 import sys
 
-sys.path.append('/home/eva/jonsnow_air_quality')
+# sys.path.append('/home/eva/jonsnow_air_quality')
 from conn_postgresql.common_db import Base, session, engine, meta
+from gen_mapping_mat import *
+from utils import mapcity
 
 import pandas as pd
 import pytz
 import numpy as np
 from sqlalchemy import Table, extract
 from datetime import datetime
+import os.path
 
 
-def gen_grid_data_test(n_times, n_features, geo_dict, mapping_mat):
+def gen_grid_data(n_times, n_features, geo_dict, mapping_mat):
     n_rows, n_cols = mapping_mat.shape
     tar_data = np.full([n_times, n_features, n_rows, n_cols], np.nan)
     for i in range(n_rows):
@@ -25,7 +28,7 @@ def gen_grid_data_test(n_times, n_features, geo_dict, mapping_mat):
     return tar_data
 
 
-def gen_grid_data(ori_data, loc_list, mapping_mat):
+def gen_grid_data_old(ori_data, loc_list, mapping_mat):
     """
     transferring original data to the matrix data
 
@@ -75,7 +78,7 @@ def gen_label_mat(pm_obj, city_id, timelist, mapping_mat):
         this_pm_dict = dict(this_pm_data[['ogc_fid', 'percentile_cont']].values)
         # this_pm_grids = list(this_pm_data['ogc_fid'])
         # this_pm_data = np.array(this_pm_data['percentile_cont']).reshape((1, 1, -1))
-        this_pm_mat = gen_grid_data_test(1, 1, this_pm_dict, mapping_mat)
+        this_pm_mat = gen_grid_data(1, 1, this_pm_dict, mapping_mat)
         pm_mat_list.append(this_pm_mat)
 
     pm_mat = np.vstack(pm_mat_list)
@@ -100,7 +103,7 @@ def gen_meo_vector(clima_obj, city_id, time_list, mapping_mat):
         this_dict = dict(this_data[['gid', 'data']].values)
         # this_pm_grids = list(this_pm_data['ogc_fid'])
         # this_pm_data = np.array(this_pm_data['percentile_cont']).reshape((1, 1, -1))
-        this_mat = gen_grid_data_test(1, len(this_data["data"].iloc[0]), this_dict, mapping_mat)
+        this_mat = gen_grid_data(1, len(this_data["data"].iloc[0]), this_dict, mapping_mat)
         meo_list.append(this_mat)
     meo_mat = np.vstack(meo_list)
     print('The shape of PM matrix = {}.'.format(meo_mat.shape))
@@ -149,7 +152,7 @@ def mainbymonth(years, months, city_ids):
     geo_name_obj = get_gridobj(f'{"los_angeles"}_{1000}m_grid_geo_name', "preprocess")
 
     geo_dict, geo_name_list = gen_geo_vector(geo_obj, geo_name_obj, grid_list)
-    static_mat = gen_grid_data_test(1, len(geo_name_list), geo_dict, mapping_mat)
+    static_mat = gen_grid_data(1, len(geo_name_list), geo_dict, mapping_mat)
     output["static_mat"] = static_mat
     output["static_features"] = geo_name_list
 
@@ -196,18 +199,37 @@ def generateTimeSection(min_time, max_time):
     return time_sections
 
 
-def main(min_time, max_time, city_id):
-    mapping_mat = np.load(f'data/Los_Angeles_1000m_grid_mat.npz')['mat']
+def check_mapping_mat_exist(filename, res, city, city_id):
+    if os.path.isfile(filename):
+        print(f'{filename} exists.')
+        return
+    else:
+        print(f'{filename} does not exist. Generate now ...')
+        gen_mapping_mat(res, city, city_id)
+        print(f'{filename} exists.')
+
+
+def gen_train_data(min_time, max_time, res=1000, city="Los Angeles"):
+    if city not in mapcity:
+        exit("Please input correct city name")
+    city_id = mapcity[city]
+    cityname = "_".join(city.split()).lower()
+
+    max_time = datetime.strptime(max_time,"%Y-%m-%d-%H")
+    min_time = datetime.strptime(min_time, "%Y-%m-%d-%H")
+
+    check_mapping_mat_exist(f'data/{cityname}_{res}m_grid_mat.npz', res, cityname, city_id)
+    mapping_mat = np.load(f'data/{cityname}_{res}m_grid_mat.npz')['mat']
     grid_list = set(mapping_mat.flatten().tolist())
     output = dict()
     output["label_mat"] = []
     output["dynamic_mat"] = []
     # static data (geo vector)
-    geo_obj = get_gridobj(f'{"los_angeles"}_{1000}m_grid_geo_vector', "preprocess")
-    geo_name_obj = get_gridobj(f'{"los_angeles"}_{1000}m_grid_geo_name', "preprocess")
+    geo_obj = get_gridobj(f'{cityname.lower()}_{res}m_grid_geo_vector', "preprocess")
+    geo_name_obj = get_gridobj(f'{cityname.lower()}_{res}m_grid_geo_name', "preprocess")
 
     geo_dict, geo_name_list = gen_geo_vector(geo_obj, geo_name_obj, grid_list)
-    static_mat = gen_grid_data_test(1, len(geo_name_list), geo_dict, mapping_mat)
+    static_mat = gen_grid_data(1, len(geo_name_list), geo_dict, mapping_mat)
     output["static_mat"] = static_mat
     output["static_features"] = geo_name_list
 
@@ -216,15 +238,15 @@ def main(min_time, max_time, city_id):
     prevYear = None
     for ts in time_sections:
         month = ts[-1].month
-        year = ts[-1].year -1 if month == 1 else ts[-1].year
+        year = ts[-1].year - 1 if month == 1 else ts[-1].year
         month = 12 if month == 1 else month - 1
         if year != prevYear:
             if year == 2020:
-                pm_obj = get_gridobj(f'prod_1000m_grid_purple_air_pm25_{year}_09_12', "preprocess")
+                pm_obj = get_gridobj(f'prod_{res}m_grid_purple_air_pm25_{year}_09_12', "preprocess")
             else:
-                pm_obj = get_gridobj(f'prod_1000m_grid_purple_air_pm25_{year}', "preprocess")
+                pm_obj = get_gridobj(f'prod_{res}m_grid_purple_air_pm25_{year}', "preprocess")
             pm_obj = session.query(pm_obj).filter(pm_obj.c.ogc_fid.in_(grid_list)).subquery()
-        climacell_obj = get_gridobj(f'prod_1000m_grid_meo_climacell_interpolate_{year}{str(month).rjust(2, "0")}',\
+        climacell_obj = get_gridobj(f'prod_{res}m_grid_meo_climacell_interpolate_{year}{str(month).rjust(2, "0")}', \
                                     "preprocess")
         climacell_obj = session.query(climacell_obj).filter(climacell_obj.c.gid.in_(grid_list)).subquery()
         climacell_mat = gen_meo_vector(climacell_obj, city_id, ts, mapping_mat)
@@ -241,13 +263,15 @@ def main(min_time, max_time, city_id):
         print(f'starttime: {ts[0]}  endtime:{ts[-1]} done')
 
     output["mapping_mat"] = mapping_mat
-    output["dynamic_features"] = ["summary",'precip_intensity','temperature','dew_point','humidity','pressure','wind_speed','wind_bearing','cloud_cover','visibility']
-
+    output["dynamic_features"] = ["summary", 'precip_intensity', 'temperature', 'dew_point', 'humidity', 'pressure',
+                                  'wind_speed', 'wind_bearing', 'cloud_cover', 'visibility']
 
     return output
 
 
 if __name__ == "__main__":
+    print("hello you are importing gen_train_data.py")
+    a = gen_train_data('2020-12-3-4','2021-1-15-17')
     min_time = datetime(2020, 12, 5, 10)
     max_time = datetime(2021, 2, 17, 6)
     city_id = 2
@@ -261,7 +285,7 @@ if __name__ == "__main__":
     geo_name_obj = get_gridobj(f'{"los_angeles"}_{1000}m_grid_geo_name', "preprocess")
 
     geo_dict, geo_name_list = gen_geo_vector(geo_obj, geo_name_obj, grid_list)
-    static_mat = gen_grid_data_test(1, len(geo_name_list), geo_dict, mapping_mat)
+    static_mat = gen_grid_data(1, len(geo_name_list), geo_dict, mapping_mat)
     output["static_mat"] = static_mat
     output["static_features"] = geo_name_list
 

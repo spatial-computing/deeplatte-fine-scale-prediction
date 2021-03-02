@@ -15,8 +15,8 @@ class BaseOptions:
         # basic parameters
         parser.add_argument('--area', type=str, default='los_angeles', help='target area')
         parser.add_argument('--resolution', type=int, defualt=1000, help='target resolution of the grids')
-        parser.add_argument('--min_time', type=str, default='2018-01-01', help='target start time')
-        parser.add_argument('--max_time', type=str, default='2018-02-01', help='target end time')
+        parser.add_argument('--min_time', type=str, default='2020-12-01', help='target start time')
+        parser.add_argument('--max_time', type=str, default='2021-02-01', help='target end time')
 
         parser.add_argument('--model_dir', type=str, help='Model name')
         parser.add_argument('--log_dir', type=str, help='Model path')

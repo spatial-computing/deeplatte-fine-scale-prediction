@@ -18,3 +18,6 @@ LOS_ANGELES_OSM = [
     'water_a',
     'waterways'
 ]
+
+mapcity = {'New York': 1, 'Los Angeles': 2, 'Chicago': 3, 'Houston': 4, 'Phoenix': 5, 'Philadelphia': 6, 'San Antonio': 7, 'San Diego': 8, 'Dallas': 9, 'San Jose': 10, 'Seattle': 11, 'San Francisco': 12}
+
