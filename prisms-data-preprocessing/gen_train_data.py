@@ -1,6 +1,6 @@
 import sys
 
-# sys.path.append('/home/eva/jonsnow_air_quality')
+sys.path.append('/home/eva/jonsnow_air_quality')
 from conn_postgresql.common_db import Base, session, engine, meta
 from gen_mapping_mat import *
 from utils import mapcity
@@ -9,7 +9,7 @@ import pandas as pd
 import pytz
 import numpy as np
 from sqlalchemy import Table, extract
-from datetime import datetime
+from datetime import datetime,timedelta
 import os.path
 
 
@@ -185,7 +185,7 @@ def generateTimeSection(min_time, max_time):
     tz = pytz.timezone('America/Los_Angeles')
     time_sections = []
     next = datetime(min_time.year, min_time.month, 1, 4)
-    if next < min_time:
+    if next <= min_time:
         next = datetime(min_time.year + min_time.month // 12, min_time.month % 12 + 1, 1, 4)
     while next < max_time:
         time_list = pd.date_range(start=min_time, end=next, closed='left', freq='1H')
@@ -237,9 +237,9 @@ def gen_train_data(min_time, max_time, res=1000, city="Los Angeles"):
 
     prevYear = None
     for ts in time_sections:
-        month = ts[-1].month
-        year = ts[-1].year - 1 if month == 1 else ts[-1].year
-        month = 12 if month == 1 else month - 1
+        month = (ts[-1]+timedelta(hours=-4)).month
+        year = (ts[-1]+timedelta(hours=-4)).year
+
         if year != prevYear:
             if year == 2020:
                 pm_obj = get_gridobj(f'prod_{res}m_grid_purple_air_pm25_{year}_09_12', "preprocess")
@@ -271,9 +271,9 @@ def gen_train_data(min_time, max_time, res=1000, city="Los Angeles"):
 
 if __name__ == "__main__":
     print("hello you are importing gen_train_data.py")
-    a = gen_train_data('2020-12-3-4','2021-1-15-17')
-    min_time = datetime(2020, 12, 5, 10)
-    max_time = datetime(2021, 2, 17, 6)
+    a = gen_train_data('2020-12-1-3','2021-2-15-4')
+    min_time = datetime(2021, 1, 1, 4)
+    max_time = datetime(2021, 1, 2, 4)
     city_id = 2
     mapping_mat = np.load(f'data/Los_Angeles_1000m_grid_mat.npz')['mat']
     grid_list = set(mapping_mat.flatten().tolist())

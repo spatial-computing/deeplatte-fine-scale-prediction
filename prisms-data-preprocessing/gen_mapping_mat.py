@@ -1,5 +1,4 @@
 from conn_postgresql.common_db import Base, session, engine, meta
-from data_models.grid_data import GridTemplate
 
 import pandas as pd
 import numpy as np
