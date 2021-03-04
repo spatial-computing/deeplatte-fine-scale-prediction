@@ -8,6 +8,7 @@ import torch.utils.data as dat
 from tensorboard import SummaryWriter
 from torch import autograd
 
+from prisms_data_preprocessing.gen_train_data import gen_train_data
 from options.train_options import TrainOptions
 from utils.early_stopping import EarlyStopping
 from utils.metrics import compute_error
@@ -202,7 +203,7 @@ if __name__ == '__main__':
 
     args = TrainOptions().parse
     data = gen_train_data(args)
-    train(data)
+    # train(data)
 
 
 

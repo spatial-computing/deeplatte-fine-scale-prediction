@@ -1,9 +1,9 @@
 import sys
 
-sys.path.append('/home/eva/jonsnow_air_quality')
-from conn_postgresql.common_db import Base, session, engine, meta
-from gen_mapping_mat import *
-from utils import mapcity
+# sys.path.append('/home/eva/jonsnow_air_quality')
+from prisms_data_preprocessing.conn_postgresql.common_db import Base, session, engine, meta
+from prisms_data_preprocessing.gen_mapping_mat import *
+from prisms_data_preprocessing.utils import mapcity
 
 import pandas as pd
 import pytz
