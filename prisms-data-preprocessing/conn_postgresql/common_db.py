@@ -4,10 +4,17 @@ from sqlalchemy.orm import sessionmaker
 import psycopg2
 from sqlalchemy.schema import MetaData
 from geoalchemy2 import Geometry
+import os
 
-pwd = r"m\\tC7;cc"
+pwd = os.environ['PGPWD']
+usr = os.environ['PGUSR']
+host = os.environ['PGHOST']
+port = os.environ['PGPORT']
+db = os.environ['PGDB']
+
+
 connection_string = 'postgresql+psycopg2://{usr}:{pwd}@jonsnow.usc.edu/air_quality_prod'\
-    .format(usr='eva', pwd='m\\tC7;cc')
+    .format(usr=usr, pwd=pwd)
 
 engine = create_engine(connection_string, echo=False)
 
@@ -19,9 +26,9 @@ session = Session()
 meta = MetaData()
 meta.reflect(bind=engine)
 
-connection = psycopg2.connect(user="eva",
-                              password="m\\tC7;cc",
-                              host="jonsnow.usc.edu",
-                              port="5432",
-                              database="air_quality_prod")
+connection = psycopg2.connect(user=usr,
+                              password=pwd,
+                              host=host,
+                              port=port,
+                              database=db)
 cursor = connection.cursor()
