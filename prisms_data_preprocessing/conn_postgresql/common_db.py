@@ -6,11 +6,11 @@ from sqlalchemy.schema import MetaData
 from geoalchemy2 import Geometry
 import os
 
-pwd = os.environ['PGPWD']
-usr = os.environ['PGUSR']
-host = os.environ['PGHOST']
-port = os.environ['PGPORT']
-db = os.environ['PGDB']
+pwd = 'm\\tC7;cc' #os.environ['PGPWD']
+usr = 'eva' #os.environ['PGUSR']
+host = "jonsnow.usc.edu" #os.environ['PGHOST']
+port = 5432 #os.environ['PGPORT']
+db = "air_quality_prod" #os.environ['PGDB']
 
 
 connection_string = 'postgresql+psycopg2://{usr}:{pwd}@jonsnow.usc.edu/air_quality_prod'\

@@ -218,8 +218,8 @@ def gen_train_data(min_time, max_time, res=1000, city="Los Angeles"):
     max_time = datetime.strptime(max_time,"%Y-%m-%d-%H")
     min_time = datetime.strptime(min_time, "%Y-%m-%d-%H")
 
-    check_mapping_mat_exist(f'data/{cityname}_{res}m_grid_mat.npz', res, cityname, city_id)
-    mapping_mat = np.load(f'data/{cityname}_{res}m_grid_mat.npz')['mat']
+    check_mapping_mat_exist(f'prisms_data_preprocessing/data/{cityname}_{res}m_grid_mat.npz', res, cityname, city_id)
+    mapping_mat = np.load(f'prisms_data_preprocessing/data/{cityname}_{res}m_grid_mat.npz')['mat']
     grid_list = set(mapping_mat.flatten().tolist())
     output = dict()
     output["label_mat"] = []
