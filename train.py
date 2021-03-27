@@ -5,9 +5,11 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import torch.utils.data as dat
-from tensorboard import SummaryWriter
+from tensorboardX import SummaryWriter
 from torch import autograd
 
+import argparse
+from prisms_data_preprocessing.gen_train_data import gen_train_data
 from options.train_options import TrainOptions
 from utils.early_stopping import EarlyStopping
 from utils.metrics import compute_error
@@ -199,9 +201,15 @@ def train(dapm, data_obj, args, **kwargs):
 
 
 if __name__ == '__main__':
+    trainoptions = TrainOptions()
+    trainoptions.initialize()
 
-    args = TrainOptions().parse
-    data = gen_train_data(args)
+    parser = trainoptions.parser
+    args = trainoptions.parse(parser)
+    # args = TrainOptions().parse()
+
+    print(args['max_time'],args['min_time'])
+    data = gen_train_data(args['min_time'],args['max_time'])
     train(data)
 
 
