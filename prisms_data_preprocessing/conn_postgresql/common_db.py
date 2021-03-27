@@ -1,20 +1,21 @@
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import psycopg2
 from sqlalchemy.schema import MetaData
-from geoalchemy2 import Geometry
 import os
 
-pwd = 'm\\tC7;cc' #os.environ['PGPWD']
-usr = 'eva' #os.environ['PGUSR']
-host = "jonsnow.usc.edu" #os.environ['PGHOST']
-port = 5432 #os.environ['PGPORT']
-db = "air_quality_prod" #os.environ['PGDB']
+load_dotenv('.env')
 
+DB_USERNAME = os.getenv("DB_USERNAME")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
 
 connection_string = 'postgresql+psycopg2://{usr}:{pwd}@jonsnow.usc.edu/air_quality_prod'\
-    .format(usr=usr, pwd=pwd)
+    .format(usr=DB_USERNAME, pwd=DB_PASSWORD)
 
 engine = create_engine(connection_string, echo=False)
 
@@ -26,9 +27,9 @@ session = Session()
 meta = MetaData()
 meta.reflect(bind=engine)
 
-connection = psycopg2.connect(user=usr,
-                              password=pwd,
-                              host=host,
-                              port=port,
-                              database=db)
+connection = psycopg2.connect(user=DB_USERNAME,
+                              password=DB_PASSWORD,
+                              host=DB_HOST,
+                              port=DB_PORT,
+                              database=DB_NAME)
 cursor = connection.cursor()

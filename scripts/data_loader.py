@@ -1,89 +1,110 @@
 import os
-import json
 import logging
-import numpy as np
-import torch.utils.data as dat
-import torch
 
-from utils.metrics import normalize_mat
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
 
 class DataObj:
 
-    def __init__(self, label_mat, dynamic_x, static_x, dynamic_features, static_features, mapping_mat):
+    def __init__(self, label_mat, dynamic_x, static_x,
+                 dynamic_feature_names, static_feature_names,
+                 mapping_mat, **kwargs):
 
         self.label_mat = label_mat
-        self.dynamic_x = dynamic_x
-        self.static_x = static_x
+        self.dynamic_x = self.norm(dynamic_x)
+        self.static_x = self.norm(static_x)
     
-        self.dynamic_feature_names = dynamic_features
-        self.static_feature_names = static_features
-        self.features_names = dynamic_features + static_features
+        self.dynamic_feature_names = dynamic_feature_names
+        self.static_feature_names = static_feature_names
+        self.features_names = dynamic_feature_names + static_feature_names
         self.mapping_mat = mapping_mat
 
-        self.n_features = len(self.dynamic_feature_names) + len(self.static_feature_names)
-        self.n_dynamic_features = len(self.dynamic_feature_names)
-        self.n_static_features = len(self.static_feature_names)
-        self.n_times, _, self.n_rows, self.n_cols = self.dynamic_x.shape
+        self.num_features = len(self.dynamic_feature_names) + len(self.static_feature_names)
+        self.num_dynamic_features = len(self.dynamic_feature_names)
+        self.num_static_features = len(self.static_feature_names)
+        self.num_times, _, self.num_rows, self.num_cols = self.dynamic_x.shape
 
-        """ initialization """
-        self.train_loc, self.val_loc, self.test_loc = [], [], []
-        self.train_y, self.val_y, self.test_y = None, None, None
+        # set up training
+        self.use_test = kwargs.get('use_test', False)
+        self.train_size = kwargs.get('train_size', 0.8)
+        self.test_size = kwargs.get('test_size', 0.2) * self.use_test
 
-    def gen_train_val_test_label(self, label_mat, locations):
-        new_label_mat = np.full(label_mat.shape, np.nan)
+        self.train_loc, self.val_loc, self.test_loc = self.split_train_val_test_locations()
+        self.train_y = self.set_target_label_mat(self.train_loc)
+        self.val_y = self.set_target_label_mat(self.val_loc)
+        self.test_y = self.set_target_label_mat(self.test_loc)
+
+    def set_target_label_mat(self, locations):
+        """ return a new label mat containing only given locations """
+
+        mat = np.full(self.label_mat.shape, np.nan)
         for loc in locations:
             r, c = np.where(self.mapping_mat == loc)
-            new_label_mat[..., r[0], c[0]] = label_mat[..., r[0], c[0]]
-        return new_label_mat
+            mat[..., r[0], c[0]] = self.label_mat[..., r[0], c[0]]
+        return mat
+
+    def split_train_val_test_locations(self):
+        """ split labeled locations into train, val, (test) set
+
+        return: train_loc, val_loc, test_loc -> list, list, list """
+
+        #  find locations that have more than 0.01 x num_times labels
+        candidate_mat = np.sum(~np.isnan(self.label_mat), axis=(0, 1)) == self.num_times
+
+        sub_region_locations = [
+            self.mapping_mat[np.where(candidate_mat[0:self.num_rows // 2, 0:self.num_cols // 2])].tolist(),
+            self.mapping_mat[np.where(candidate_mat[0:self.num_rows // 2, self.num_cols // 2:])].tolist(),
+            self.mapping_mat[np.where(candidate_mat[self.num_rows // 2:, 0:self.num_cols // 2])].tolist(),
+            self.mapping_mat[np.where(candidate_mat[self.num_rows // 2:, self.num_cols // 2:])].tolist()
+        ]
+
+        train_loc, val_loc, test_loc = [], [], []
+        for loc in sub_region_locations:
+            if self.use_test:
+                train, test = train_test_split(loc, test_size=self.test_size, random_state=1234)
+                train, val = train_test_split(train, train_size=self.train_size, random_state=1234)
+                test_loc += test_loc
+            else:
+                train, val = train_test_split(loc, train_size=self.train_size, random_state=1234)
+            train_loc += train
+            val_loc += val
+
+        return sorted(train_loc), sorted(val_loc), sorted(test_loc)
+
+    @staticmethod
+    def norm(mat):
+        num_times, num_features, num_rows, num_cols = mat.shape
+        mat_2d = np.moveaxis(mat, 1, -1)  # shape: (num_times, num_rows, num_cols, num_features)
+        mat_2d = mat_2d.reshape(-1, num_features)  # shape: (num_samples, num_features)
+        norm_mat = StandardScaler().fit_transform(mat_2d)
+        norm_mat = norm_mat.reshape(num_times, num_rows, num_cols, num_features)
+        norm_mat = np.moveaxis(norm_mat, -1, 1)  # shape: (num_times, num_features, num_rows, num_cols)
+        return norm_mat
 
 
-def load_data(data_dir, args, **kwargs):
-    """ load data of current months and previous month to for generating complete prediction """
-    
-    dynamic_mat, label_mat = [], []
-    
-    """ load data for previous month if exists """
-    data_file = os.path.join(data_dir, f'{args.area}_{args.resolution}m_{args.last_year}/{args.area}_{args.resolution}m_{args.last_year}_{args.last_month}.npz')
-    if os.path.isfile(data_file):
-        data = np.load(data_file)
-        label_mat.append(data['label_mat'][-args.seq_len:, ...])
-        dynamic_mat.append(data['dynamic_mat'][-args.seq_len:, ...])
-    
-    """ load data for current months """    
-    for m in sorted(args.months):
-        data_file = os.path.join(data_dir, f'{args.area}_{args.resolution}m_{args.year}/{args.area}_{args.resolution}m_{args.year}_{m}.npz')
-        data = np.load(data_file)
-        label_mat.append(data['label_mat'])
-        dynamic_mat.append(data['dynamic_mat'])
+def load_data_from_db(args):
+    pass
 
-    mapping_mat = data['mapping_mat']
-    static_mat = data['static_mat']
-    dynamic_features, static_features = list(data['dynamic_features']), list(data['static_features'])
-    label_mat = np.concatenate(label_mat)
-    dynamic_mat = np.concatenate(dynamic_mat)
+
+def load_data_from_file(data_path):
+    """ load data from a file """
     
-    """ normalize data """
-    if_retain_last_dim = True if kwargs.get('if_retain_last_dim') is None else kwargs['if_retain_last_dim']
-    dynamic_x = normalize_mat(dynamic_mat, if_retain_last_dim=if_retain_last_dim)
-    static_x = normalize_mat(static_mat, if_retain_last_dim=if_retain_last_dim)
-    
-    data_obj = DataObj(label_mat, dynamic_x, static_x, dynamic_features, static_features, mapping_mat)
+    if not os.path.isfile(data_path):
+        raise FileNotFoundError
+
+    data = np.load(data_path)
+    dynamic_feature_names, static_feature_names = list(data['dynamic_features']), list(data['static_features'])
+    data_obj = DataObj(label_mat=data['label_mat'],
+                       dynamic_x=data['dynamic_mat'],
+                       static_x=data['static_mat'],
+                       dynamic_feature_names=dynamic_feature_names,
+                       static_feature_names=static_feature_names,
+                       mapping_mat=data['mapping_mat'])
     return data_obj
 
 
-def load_locations(train_val_test, args):
-    """ build train, val, test labels """
-    
-    val_loc = train_val_test[f'{args.year}-{args.tar_month}']['val_loc']
-    test_loc = train_val_test[f'{args.year}-{args.tar_month}']['test_loc']
-    
-    # remove the selected testing locations from other dates
-    locations = []
-    for m in args.months:
-        ym = f'{args.year}-{m}'
-        locations += train_val_test[ym]['train_loc'] + train_val_test[ym]['val_loc'] + train_val_test[ym]['test_loc']
-    train_loc = [i for i in locations if i not in val_loc and i not in test_loc]
-    return train_loc, val_loc, test_loc
 
 
 def data_logging(data_obj):

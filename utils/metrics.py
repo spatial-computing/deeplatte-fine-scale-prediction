@@ -23,35 +23,35 @@ def r_m_s_e_error(ground_truth, prediction):
     return math.sqrt(mse)
 
 
-class Norm:
-
-    def __init__(self, x):
-        self.mean = np.nanmean(x, axis=0)
-        self.std = np.nanstd(x, axis=0)
-
-    def transform(self, x):
-        return np.divide(x - self.mean, self.std, out=np.zeros_like(x - self.mean), where=self.std != 0.0)
-
-
-def normalize_mat(input_mat, if_retain_last_dim=True):
-    """ normalize the input feature matrix
-
-    Params:
-        feature_mat: (n_times, n_features, n_rows, n_cols)
-        if_retain_last_dim: if keeping the last dimension as original
-    Return:
-        norm_mat: (n_times, n_features, n_rows, n_cols)
-    """
-
-    n_times, n_features, n_rows, n_cols = input_mat.shape
-    x_2d = np.moveaxis(input_mat, 1, -1)  # => (n_times, n_rows, n_cols, n_features)
-    x_2d = x_2d.reshape(-1, n_features)  # => (n_samples, n_features)
-    norm = Norm(x_2d)
-    norm_mat = norm.transform(x_2d)
-
-    norm_mat = norm_mat.reshape(n_times, n_rows, n_cols, n_features)  # => (n_times, n_rows, n_cols, n_features)
-    if if_retain_last_dim:
-        norm_mat = np.moveaxis(norm_mat, -1, 1)  # => (n_times, n_features, n_rows, n_cols)
-
-    # print('Shape of the normalized matrix = {}'.format(norm_mat.shape))
-    return norm_mat
+# class Norm:
+#
+#     def __init__(self, x):
+#         self.mean = np.nanmean(x, axis=0)
+#         self.std = np.nanstd(x, axis=0)
+#
+#     def transform(self, x):
+#         return np.divide(x - self.mean, self.std, out=np.zeros_like(x - self.mean), where=self.std != 0.0)
+#
+#
+# def normalize_mat(input_mat, if_retain_last_dim=True):
+#     """ normalize the input feature matrix
+#
+#     Params:
+#         feature_mat: (n_times, n_features, n_rows, n_cols)
+#         if_retain_last_dim: if keeping the last dimension as original
+#     Return:
+#         norm_mat: (n_times, n_features, n_rows, n_cols)
+#     """
+#
+#     n_times, n_features, n_rows, n_cols = input_mat.shape
+#     x_2d = np.moveaxis(input_mat, 1, -1)  # => (n_times, n_rows, n_cols, n_features)
+#     x_2d = x_2d.reshape(-1, n_features)  # => (n_samples, n_features)
+#     norm = Norm(x_2d)
+#     norm_mat = norm.transform(x_2d)
+#
+#     norm_mat = norm_mat.reshape(n_times, n_rows, n_cols, n_features)  # => (n_times, n_rows, n_cols, n_features)
+#     if if_retain_last_dim:
+#         norm_mat = np.moveaxis(norm_mat, -1, 1)  # => (n_times, n_features, n_rows, n_cols)
+#
+#     # print('Shape of the normalized matrix = {}'.format(norm_mat.shape))
+#     return norm_mat

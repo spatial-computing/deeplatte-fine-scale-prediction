@@ -2,31 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f3212dff-cea8-4089-b66c-e55f0a22330d" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/yijunlin.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/options/test_options.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/options/train_options.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Rhistory" beforeDir="false" afterPath="$PROJECT_DIR$/options/base_options.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ae_main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dap_main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/idw.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/auto_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/auto_encoder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/conv_lstm.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/conv_lstm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/deep_ap.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/fc.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/fc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/mask_net.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/mask_net.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/predict.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/auto_encoder.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/conv_lstm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/deep_latte.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/fc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/feature_attention.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/mask_net.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/spatial_loss_func.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/options/base_options.py" beforeDir="false" afterPath="$PROJECT_DIR$/options/base_options.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/options/train_options.py" beforeDir="false" afterPath="$PROJECT_DIR$/options/train_options.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisms_data_preprocessing/conn_postgresql/common_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/prisms_data_preprocessing/conn_postgresql/common_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisms_data_preprocessing/data/los_angeles_1000m_grid_mat.npz" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/data_loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pretrain_ae.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pretrain_ae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/result_viz.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/train_dap.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/early_stopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/early_stopping.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/plotting_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/plotting_utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -40,8 +32,8 @@
       <file leaf-file-name="data_loader.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/data_loader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+            <state>
+              <caret line="9" selection-start-line="9" selection-end-line="9" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -49,14 +41,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="187" column="29" selection-start-line="187" selection-start-column="29" selection-end-line="187" selection-end-column="29" />
+            <state relative-caret-position="2073">
+              <caret line="177" selection-start-line="177" selection-end-line="177" />
               <folding>
-                <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#0#9#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="700">
+              <caret line="130" column="10" selection-start-line="130" selection-start-column="10" selection-end-line="130" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -64,7 +65,7 @@
       <file leaf-file-name="train_deeplatte.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/train_deeplatte.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2261">
+            <state relative-caret-position="2091">
               <caret line="133" column="17" selection-start-line="133" selection-start-column="17" selection-end-line="133" selection-end-column="17" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -73,23 +74,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="deep_latte.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/deep_latte.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="46" column="30" selection-start-line="46" selection-start-column="30" selection-end-line="46" selection-end-column="30" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="base_options.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/options/base_options.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1224">
-              <caret line="72" column="96" lean-forward="true" selection-start-line="72" selection-start-column="96" selection-end-line="72" selection-end-column="96" />
+            <state relative-caret-position="1241">
+              <caret line="73" column="34" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -99,14 +88,33 @@
       </file>
       <file leaf-file-name="train_options.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/options/train_options.py">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="562">
+              <caret line="53" column="74" selection-start-line="53" selection-start-column="74" selection-end-line="53" selection-end-column="74" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="common_db.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/prisms_data_preprocessing/conn_postgresql/common_db.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+              <folding>
+                <element signature="e#0#30#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file leaf-file-name="early_stopping.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils/early_stopping.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="18" column="31" selection-end-line="52" />
+            <state relative-caret-position="306">
+              <caret line="18" column="30" selection-end-line="48" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -142,10 +150,14 @@
         <option value="$PROJECT_DIR$/models/latte.py" />
         <option value="$PROJECT_DIR$/models/conv_lstm.py" />
         <option value="$PROJECT_DIR$/models/deep_latte.py" />
-        <option value="$PROJECT_DIR$/env/torch-env.yml" />
-        <option value="$PROJECT_DIR$/options/train_options.py" />
         <option value="$PROJECT_DIR$/options/base_options.py" />
         <option value="$PROJECT_DIR$/train.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/options/train_options.py" />
+        <option value="$PROJECT_DIR$/env/torch-env.yml" />
+        <option value="$PROJECT_DIR$/env/.env" />
+        <option value="$PROJECT_DIR$/env/env_example" />
+        <option value="$PROJECT_DIR$/prisms_data_preprocessing/conn_postgresql/common_db.py" />
       </list>
     </option>
   </component>
@@ -159,10 +171,9 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="x" value="1973" />
-    <option name="y" value="23" />
-    <option name="width" value="1870" />
-    <option name="height" value="1057" />
+    <option name="x" value="1920" />
+    <option name="width" value="1920" />
+    <option name="height" value="1080" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -172,13 +183,17 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="deeplatte-fine-scale-prediction" type="b2602c69:ProjectViewProjectNode" />
               <item name="deeplatte-fine-scale-prediction" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="deeplatte-fine-scale-prediction" type="b2602c69:ProjectViewProjectNode" />
+              <item name="deeplatte-fine-scale-prediction" type="462c0819:PsiDirectoryNode" />
+              <item name="backup" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="deeplatte-fine-scale-prediction" type="b2602c69:ProjectViewProjectNode" />
@@ -198,6 +213,17 @@
             <path>
               <item name="deeplatte-fine-scale-prediction" type="b2602c69:ProjectViewProjectNode" />
               <item name="deeplatte-fine-scale-prediction" type="462c0819:PsiDirectoryNode" />
+              <item name="prisms_data_preprocessing" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="deeplatte-fine-scale-prediction" type="b2602c69:ProjectViewProjectNode" />
+              <item name="deeplatte-fine-scale-prediction" type="462c0819:PsiDirectoryNode" />
+              <item name="prisms_data_preprocessing" type="462c0819:PsiDirectoryNode" />
+              <item name="conn_postgresql" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="deeplatte-fine-scale-prediction" type="b2602c69:ProjectViewProjectNode" />
+              <item name="deeplatte-fine-scale-prediction" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -213,6 +239,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -224,7 +251,11 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/env" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/options" />
       <recent name="$PROJECT_DIR$/env" />
     </key>
@@ -266,7 +297,7 @@
       <window_info anchor="bottom" id="Python Console" order="11" />
       <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.21393035" />
       <window_info anchor="right" id="Remote Host" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17784877" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21671991" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="5" />
       <window_info anchor="right" id="SciView" order="4" />
@@ -292,49 +323,6 @@
     <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="true" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/utils/metrics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/train_deeplatte.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2227">
-          <caret line="141" column="17" lean-forward="true" selection-start-line="138" selection-start-column="8" selection-end-line="141" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/early_stopping.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="18" column="31" selection-end-line="52" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train__embedding_spatiotemporal_similar.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/logging_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" lean-forward="true" selection-start-line="2" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/options/test_options.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -345,21 +333,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plot_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_results.ipynb" />
     <entry file="file://$PROJECT_DIR$/models/conv_lstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/plotting_utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -368,13 +344,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train__dapm.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/train__dapm.ipynb" />
     <entry file="file://$PROJECT_DIR$/scripts/data_loader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="680">
@@ -395,21 +365,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plot_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_results.ipynb" />
     <entry file="file://$PROJECT_DIR$/models/conv_lstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/plotting_utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -418,13 +376,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train__dapm.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/train__dapm.ipynb" />
     <entry file="file://$PROJECT_DIR$/scripts/data_loader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="680">
@@ -445,21 +397,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plot_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_results.ipynb" />
     <entry file="file://$PROJECT_DIR$/models/conv_lstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/plotting_utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -478,21 +418,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plot_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_results.ipynb" />
     <entry file="file://$PROJECT_DIR$/models/conv_lstm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/options/test_options.py">
       <provider selected="true" editor-type-id="text-editor" />
@@ -504,20 +432,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plot_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plot_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_results.ipynb" />
+    <entry file="file://$PROJECT_DIR$/plot_results.ipynb" />
     <entry file="file://$PROJECT_DIR$/utils/plotting_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -534,27 +450,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train__embedding_spatiotemporal_similar.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train__dapm.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/predict.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="2" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/train__embedding_spatiotemporal_similar.ipynb" />
+    <entry file="file://$PROJECT_DIR$/train__dapm.ipynb" />
+    <entry file="file://$PROJECT_DIR$/predict.ipynb" />
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -565,47 +463,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/env/create_env.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="30" selection-start-column="30" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/env/create_env.txt" />
     <entry file="file://$PROJECT_DIR$/scripts/data_loader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+        <state>
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/arguments.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" selection-start-line="7" selection-start-column="4" selection-end-line="12" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/arguments.py" />
     <entry file="file://$PROJECT_DIR$/models/conv_lstm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="812">
           <caret line="166" selection-start-line="166" selection-end-line="166" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/env/torch-env.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="20" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -618,7 +491,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/train_deeplatte.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2261">
+        <state relative-caret-position="2091">
           <caret line="133" column="17" selection-start-line="133" selection-start-column="17" selection-end-line="133" selection-end-column="17" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
@@ -628,21 +501,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/early_stopping.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="18" column="31" selection-end-line="52" />
+        <state relative-caret-position="306">
+          <caret line="18" column="30" selection-end-line="48" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/options/train_options.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/options/base_options.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1224">
-          <caret line="72" column="96" lean-forward="true" selection-start-line="72" selection-start-column="96" selection-end-line="72" selection-end-column="96" />
+        <state relative-caret-position="1241">
+          <caret line="73" column="34" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
@@ -651,7 +521,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/deep_latte.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
+        <state relative-caret-position="663">
           <caret line="46" column="30" selection-start-line="46" selection-start-column="30" selection-end-line="46" selection-end-column="30" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
@@ -661,10 +531,61 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="187" column="29" selection-start-line="187" selection-start-column="29" selection-end-line="187" selection-end-column="29" />
+        <state relative-caret-position="2073">
+          <caret line="177" selection-start-line="177" selection-end-line="177" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/options/train_options.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="562">
+          <caret line="53" column="74" selection-start-line="53" selection-start-column="74" selection-end-line="53" selection-end-column="74" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/env/torch-env.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="20" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/env/env_example">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="26" lean-forward="true" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="700">
+          <caret line="130" column="10" selection-start-line="130" selection-start-column="10" selection-end-line="130" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/prisms_data_preprocessing/conn_postgresql/common_db.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
           </folding>
         </state>
       </provider>
