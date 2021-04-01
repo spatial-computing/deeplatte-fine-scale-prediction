@@ -28,8 +28,8 @@ def train():
     test_idx_data_loader = dat.DataLoader(dataset=idx_dat, batch_size=1, shuffle=False)
 
     """ set writer, loss function, and optimizer """
-    writer = SummaryWriter(args.run_file)
     mse_loss_func = nn.MSELoss()
+    mse_sum_loss_func = nn.MSELoss(reduction='sum')
     spatial_loss_func = SpatialLoss(sp_neighbor=args.sp_neighbor)
     temporal_loss_func = TemporalLoss(tp_neighbor=args.tp_neighbor)
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
@@ -50,10 +50,10 @@ def train():
         return torch.tensor(y, dtype=torch.float).to(device)
 
     """ training """
-    for epoch in range(args.epochs):
+    for epoch in range(args.num_epochs):
 
         model.train()
-        total_losses, train_losses, val_losses, alosses = 0, 0, 0, 0
+        total_losses, train_losses, val_losses, l1_losses, ae_losses, sp_losses = 0, 0, 0, 0, 0, 0
 
         for _, idx in enumerate(train_idx_data_loader):
             batch_idx = idx[0]
@@ -64,22 +64,26 @@ def train():
             batch_val_y = construct_y(batch_idx, data_obj.val_y)
 
             """ start train """
-            out, masked_x, _, de_x, em = model(batch_x)
+            out, _, _, de_x, em = model(batch_x)
             train_loss = mse_loss_func(batch_y[~torch.isnan(batch_y)], out[~torch.isnan(batch_y)])
             train_losses += train_loss.item()
 
             """ add loss according to the model type """
             total_loss = train_loss
-            if 'l1' in args.model_type:
-                total_loss += model.sparse_layer.l1_loss() * args.alpha
+            if 'l1' in model_types:
+                l1_loss = model.sparse_layer.l1_loss()
+                l1_losses += l1_loss.item()
+                total_loss += l1_loss * args.alpha
 
-            if 'ae' in args.model_type:
-                ae_loss = mse_loss_func(masked_x, de_x)
-                total_loss += ae_loss * args.gamma
+            if 'ae' in model_types:
+                ae_loss = mse_sum_loss_func(masked_x, de_x)
+                ae_losses += ae_loss.item()
+                total_loss += ae_loss * args.beta
 
-            if 'sc' in args.model_type:
+            if 'sp' in model_types:
                 sp_loss = spatial_loss_func(out)
-                total_loss += sp_loss * args.beta
+                sp_losses += sp_loss.item()
+                total_loss += sp_loss * args.gamma
 
             # if 'vg' in args.model_type:
             #     # 1-step temporal neighboring loss
@@ -107,17 +111,22 @@ def train():
             val_loss = mse_loss_func(batch_val_y[~torch.isnan(batch_val_y)], out[~torch.isnan(batch_val_y)])
             val_losses += val_loss.item()
 
-            break
+        if args.verbose:
+            logging.info('Epoch [{}/{}] total_loss = {:.3f}, train_loss = {:.3f}, val_loss = {:.3f}, '
+                         'l1_losses = {:.3f}, ae_losses = {:.3f}, sp_losses = {:.3f}.'
+                         .format(epoch, args.num_epochs, total_losses, train_losses, val_losses,
+                                 l1_losses, ae_losses, sp_losses))
 
         # write for tensor board visualization
-        writer.add_scalar('data/train_loss', train_losses, epoch)
-        writer.add_scalar('data/val_loss', val_losses, epoch)
+        if args.use_tb:
+            tb_writer.add_scalar('data/train_loss', train_losses, epoch)
+            tb_writer.add_scalar('data/val_loss', val_losses, epoch)
 
         # early_stopping
         early_stopping(val_losses, model, model_file)
 
         # evaluate testing data
-        if epoch % 2 == 0 and len(data_obj.test_loc) == 0:
+        if len(data_obj.test_loc) == 0 and False:
 
             model.eval()
             prediction = []
@@ -132,14 +141,11 @@ def train():
             prediction = np.concatenate(prediction)
             acc = compute_error(data_obj.test_y[args.seq_len + 1:, ...], prediction)
 
-        if args.verbose:
-            logging.info('Epoch [{}/{}] testing: rmse = {:.3f}, mape = {:.3f}, r2 = {:.3f}.'
-                         .format(epoch, args.epochs, *acc))
-            logging.info('Epoch [{}/{}] total_loss = {:.3f}, train_loss = {:.3f}, val_loss = {:.3f}.'
-                         .format(epoch, args.epochs, total_losses, train_losses, val_losses))
+            if args.verbose:
+                logging.info('Epoch [{}/{}] testing: rmse = {:.3f}, mape = {:.3f}, r2 = {:.3f}.'
+                             .format(epoch, args.num_epochs, *acc))
 
         if early_stopping.early_stop:
-            logging.info('{} - val_loss = {:.4f}. Early stopping.'.format(args.model_name, early_stopping.val_loss_min))
             break
 
 
@@ -148,6 +154,12 @@ if __name__ == '__main__':
     args = parse_args()
     device = torch.device(f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu')  # the gpu device
 
+    """ tensor board """
+    if args.use_tb:
+        tb_writer = SummaryWriter(args.tb_path)
+    else:
+        tb_writer = None
+
     """ load data """
     if os.path.exists(args.data_path):
         data_obj = load_data_from_file(args.data_path)
@@ -155,14 +167,15 @@ if __name__ == '__main__':
         data_obj = load_data_from_db(args)
 
     """ load model """
+    model_types = args.model_types.split(',')
     model = DeepLatte(in_features=data_obj.num_features,
-                      en_features=[64, 16],
-                      de_features=[16, 64],
+                      en_features=[int(i) for i in args.en_features.split(',')],
+                      de_features=[int(i) for i in args.de_features.split(',')],
                       in_size=(data_obj.num_rows, data_obj.num_cols),
-                      h_channels=32,
-                      kernel_sizes=[1, 3, 5],
+                      h_channels=args.h_channels,
+                      kernel_sizes=[int(i) for i in args.kernel_sizes.split(',')],
                       num_layers=1,
-                      h_features=16,
+                      fc_h_features=args.fc_h_features,
                       out_features=1,  # fixed
                       p=0.5,
                       device=device).to(device)

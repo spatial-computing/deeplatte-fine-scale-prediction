@@ -32,7 +32,7 @@ class DiagPruneLinear(nn.Module):
         self.linear_layer.weight.register_hook(backward_hook)  # hook to zero out bad gradients
 
         # register a prune on the weights by l1 norm
-        l1_unstructured(self.linear_layer, name='weight', amount=0.95)
+        l1_unstructured(self.linear_layer, name='weight', amount=0.996)
 
     def l1_loss(self):
         return self.linear_layer.weight.abs().sum()

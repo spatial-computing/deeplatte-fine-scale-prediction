@@ -10,7 +10,7 @@ class DeepLatte(nn.Module):
 
     def __init__(self, in_features, en_features, de_features,
                  in_size, h_channels, kernel_sizes, num_layers,
-                 h_features, out_features, **kwargs):
+                 fc_h_features, out_features, **kwargs):
         """
         params:
             in_features (int): size of input sample
@@ -20,7 +20,7 @@ class DeepLatte(nn.Module):
             h_channels (int or list): number of channels of hidden state, assert len(h_channels) == num_layers
             kernel_sizes (list): size of the convolution kernels
             num_layers (int): number of layers in ConvLSTM
-            h_features (int): size of hidden features in the FC layer
+            fc_h_features (int): size of hidden features in the FC layer
             out_features (int): size of output sample
         """
 
@@ -54,7 +54,7 @@ class DeepLatte(nn.Module):
                                                 device=self.device))
 
         self.fc = Stack2Linear(in_features=h_channels[-1] * len(kernel_sizes),
-                               h_features=h_features,
+                               h_features=fc_h_features,
                                out_features=out_features)
 
     def forward(self, input_data):  # shape: (b, t, c, h, w)

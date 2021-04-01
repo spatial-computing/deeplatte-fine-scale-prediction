@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 """
 Reference: https://github.com/spacejake/convLSTM.pytorch/blob/master/convlstm.py
@@ -39,13 +38,13 @@ class ConvLSTMCell(nn.Module):
         combined_output = self.conv(combined)
         cc_i, cc_f, cc_o, cc_g = torch.split(combined_output, self.h_channels, dim=1)
 
-        i = F.sigmoid(cc_i)
-        f = F.sigmoid(cc_f)
-        o = F.sigmoid(cc_o)
-        g = F.tanh(cc_g)
+        i = torch.sigmoid(cc_i)
+        f = torch.sigmoid(cc_f)
+        o = torch.sigmoid(cc_o)
+        g = torch.tanh(cc_g)
 
         c_cur = f * c_prev + i * g
-        h_cur = o * F.tanh(c_cur)
+        h_cur = o * torch.tanh(c_cur)
 
         return h_cur, c_cur
 

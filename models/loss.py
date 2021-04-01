@@ -8,13 +8,14 @@ class OneStepSpatialLoss(nn.Module):
 
         super(OneStepSpatialLoss, self).__init__()
         self.mse_loss_func = nn.MSELoss()
-        self.loss = 0.
 
     def forward(self, input_data):
-        self.loss += self.mse_loss_func(input_data[..., 1:, 1:], input_data[..., :-1, :-1])
-        self.loss += self.mse_loss_func(input_data[..., 1:, :], input_data[..., :-1, :])
-        self.loss += self.mse_loss_func(input_data[..., :, 1:], input_data[..., :, :-1])
-        return self.loss
+        loss = 0.
+        t, _, h, w = input_data.shape
+        loss += self.mse_loss_func(input_data[..., 1:, 1:], input_data[..., :-1, :-1])
+        loss += self.mse_loss_func(input_data[..., 1:, :], input_data[..., :-1, :])
+        loss += self.mse_loss_func(input_data[..., :, 1:], input_data[..., :, :-1])
+        return loss / t / h / w
 
 
 class SpatialLoss(nn.Module):
@@ -28,24 +29,22 @@ class SpatialLoss(nn.Module):
         self.loss = 0.
 
     def forward(self, input_data):
-
+        loss = 0.
         t, _, h, w = input_data.shape
-
         for i in range(-self.sp_neighbor, self.sp_neighbor + 1):
             for j in range(-self.sp_neighbor, self.sp_neighbor + 1):
                 weight = (i * i + j * j) ** 0.5
                 if i >= 0 and j >= 0 and weight != 0:
-                    self.loss += self.mse_loss_func(input_data[..., i:, j:] - input_data[..., : h - i, : w - j]) / weight
+                    loss += self.mse_loss_func(input_data[..., i:, j:], input_data[..., : h - i, : w - j]) / weight
                 elif i >= 0 and j < 0:
-                    self.loss += self.mse_loss_func(input_data[..., i:, :j] - input_data[..., : h - i, -j:]) / weight
+                    loss += self.mse_loss_func(input_data[..., i:, :j], input_data[..., : h - i, -j:]) / weight
                 elif i < 0 and j >= 0:
-                    self.loss += self.mse_loss_func(input_data[..., :i, j:] - input_data[..., -i:, : w - j]) / weight
+                    loss += self.mse_loss_func(input_data[..., :i, j:], input_data[..., -i:, : w - j]) / weight
                 elif i < 0 and j < 0:
-                    self.loss += self.mse_loss_func(input_data[..., :i, :j] - input_data[..., -i:, -j:]) / weight
+                    loss += self.mse_loss_func(input_data[..., :i, :j], input_data[..., -i:, -j:]) / weight
                 else:
                     pass
-
-        return self.loss
+        return loss / t / h / w
 
 
 class TemporalLoss(nn.Module):

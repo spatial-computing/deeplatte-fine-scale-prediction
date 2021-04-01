@@ -128,4 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /prisms_data_preprocessing/parser_test.py
-./backup/*
+/backup/*
+/sample_data/los_angeles_1000m_grid_mat.npz

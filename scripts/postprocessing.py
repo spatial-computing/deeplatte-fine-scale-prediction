@@ -85,7 +85,7 @@ def write_prediction_csv(prediction, label_mat, mapping_mat, args, **kwargs):
 def write_prediction_mongodb(prediction, mapping_mat, args, **kwargs):
     """ write the predictions to a database """
 
-    client = pymongo.MongoClient("mongodb://jon:snow@jonsnow.usc.edu:65533/jonsnow")
+    client = pymongo.MongoClient()
 
     n_times, _, n_rows, n_cols = prediction.shape
     mapping_mat_copy = mapping_mat.reshape(1, n_rows, n_cols)
@@ -124,5 +124,4 @@ def write_mongodb(t, document, client, collection_name, max_attempts=3):
             
         except Exception as e:
             print(max_attempts, condition, e)
-            time.sleep(5)
-            
+
