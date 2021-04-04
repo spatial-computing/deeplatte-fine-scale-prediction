@@ -5,7 +5,7 @@ import pytz
 import torch
 import torch.utils.data as dat
 
-from data_preprocessing.conn_postgresql.common_db import MONGO_CONN_URI
+from data_preprocessing.db_conn.common_db import MONGO_CONN_URI
 from scripts.data_loader import load_data_from_file, load_data_from_db
 from options.test_options import parse_args
 from utils.metrics import compute_error
@@ -40,6 +40,8 @@ def predict():
             prediction.append(out.cpu().data.numpy())
 
     prediction = np.concatenate(prediction)
+    print((data_obj.test_y[args.seq_len + 1:, ...]>0).sum())
+    #print(prediction)
     acc = compute_error(data_obj.test_y[args.seq_len + 1:, ...], prediction)
 
     def write_res(gids, prediction, time):
@@ -90,7 +92,7 @@ if __name__ == '__main__':
                       p=0.5,
                       device=device).to(device)
 
-    model_file = os.path.join(args.model_path, args.model_name + '.pkl')
+    model_file = os.path.join(args.model_path, args.model_name + '_from_db.pkl')
     model.load_state_dict(torch.load(model_file))
 
     predict()

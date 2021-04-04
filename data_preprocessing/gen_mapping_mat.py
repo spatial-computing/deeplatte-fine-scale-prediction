@@ -1,4 +1,4 @@
-from prisms_data_preprocessing.conn_postgresql.common_db import Base, session, engine, meta
+from data_preprocessing.db_conn.common_db import Base, session, engine, meta
 
 import pandas as pd
 import numpy as np
@@ -80,7 +80,7 @@ def gen_mapping_mat(res=1000, city="los_angeles", city_id=2):
 
     mat = gen_matrix(coordobj, city_id)
     global_n_rows, global_n_cols = mat.shape
-    output_file = f'prisms_data_preprocessing/data/{city}_{res}m_grid_mat.npz'
+    output_file = f'data_preprocessing/data/{city}_{res}m_grid_mat.npz'
     print(output_file)
     print('Number of rows = {}.'.format(global_n_rows))
     print('Number of cols = {}.'.format(global_n_cols))

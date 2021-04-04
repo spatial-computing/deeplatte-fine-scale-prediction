@@ -1,9 +1,9 @@
 import sys
 
-# sys.path.append('/home/eva/jonsnow_air_quality')
-from prisms_data_preprocessing.conn_postgresql.common_db import Base, session, engine, meta
-from prisms_data_preprocessing.gen_mapping_mat import *
-from prisms_data_preprocessing.utils import mapcity
+sys.path.append('/home/eva/deeplatte-fine-scale-prediction')
+from data_preprocessing.db_conn.common_db import Base, session, engine, meta
+from data_preprocessing.gen_mapping_mat import *
+from data_preprocessing.utils import mapcity
 
 import pandas as pd
 import pytz
@@ -209,7 +209,7 @@ def check_mapping_mat_exist(filename, res, city, city_id):
         print(f'{filename} exists.')
 
 
-def gen_train_data(min_time, max_time, res=1000, city="Los Angeles"):
+def gen_train_data(min_time, max_time, res=1000, city="los_angeles"):
     if city not in mapcity:
         exit("Please input correct city name")
     city_id = mapcity[city]
@@ -218,8 +218,8 @@ def gen_train_data(min_time, max_time, res=1000, city="Los Angeles"):
     max_time = datetime.strptime(max_time,"%Y-%m-%d-%H")
     min_time = datetime.strptime(min_time, "%Y-%m-%d-%H")
 
-    check_mapping_mat_exist(f'prisms_data_preprocessing/data/{cityname}_{res}m_grid_mat.npz', res, cityname, city_id)
-    mapping_mat = np.load(f'prisms_data_preprocessing/data/{cityname}_{res}m_grid_mat.npz')['mat']
+    check_mapping_mat_exist(f'data_preprocessing/data/{cityname}_{res}m_grid_mat.npz', res, cityname, city_id)
+    mapping_mat = np.load(f'data_preprocessing/data/{cityname}_{res}m_grid_mat.npz')['mat']
     grid_list = set(mapping_mat.flatten().tolist())
     output = dict()
     output["label_mat"] = []

@@ -4,6 +4,7 @@ import logging
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from data_preprocessing.gen_train_data import gen_train_data
 
 
 class DataObj:
@@ -85,8 +86,16 @@ class DataObj:
 
 
 def load_data_from_db(args):
-    pass
-
+    data = gen_train_data(args.min_time,args.max_time,args.resolution,args.area)
+    dynamic_feature_names, static_feature_names = list(data['dynamic_features']), list(data['static_features'])
+    data_obj = DataObj(label_mat=data['label_mat'],
+                       dynamic_x=data['dynamic_mat'],
+                       static_x=data['static_mat'],
+                       dynamic_feature_names=dynamic_feature_names,
+                       static_feature_names=static_feature_names,
+                       mapping_mat=data['mapping_mat'])
+    
+    return data_obj
 
 def load_data_from_file(data_path):
     """ load data from a file """

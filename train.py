@@ -76,7 +76,7 @@ def train():
                 total_loss += l1_loss * args.alpha
 
             if 'ae' in model_types:
-                ae_loss = mse_sum_loss_func(masked_x, de_x)
+                ae_loss = model.sparse_layer.l1_loss()#mse_sum_loss_func(masked_x, de_x)
                 ae_losses += ae_loss.item()
                 total_loss += ae_loss * args.beta
 
@@ -153,7 +153,7 @@ if __name__ == '__main__':
 
     args = parse_args()
     device = torch.device(f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu')  # the gpu device
-
+    print(args.min_time,args.max_time)
     """ tensor board """
     if args.use_tb:
         tb_writer = SummaryWriter(args.tb_path)
@@ -166,6 +166,8 @@ if __name__ == '__main__':
     else:
         data_obj = load_data_from_db(args)
 
+    print((data_obj.dynamic_x>0).sum())
+    pass
     """ load model """
     model_types = args.model_types.split(',')
     model = DeepLatte(in_features=data_obj.num_features,
@@ -180,7 +182,7 @@ if __name__ == '__main__':
                       p=0.5,
                       device=device).to(device)
 
-    model_file = os.path.join(args.model_path, args.model_name + '.pkl')
+    model_file = os.path.join(args.model_path, args.model_name + '_from_db.pkl')
     if os.path.exists(model_file):
         model.load_state_dict(torch.load(model_file))
 
