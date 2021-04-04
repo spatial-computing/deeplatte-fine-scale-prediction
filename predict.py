@@ -5,7 +5,7 @@ import pytz
 import torch
 import torch.utils.data as dat
 
-from data_preprocessing.conn_postgresql.common_db import MONGO_CONN_URI
+from data_preprocessing.db_conn.common_db import MONGO_CONN_URI
 from scripts.data_loader import load_data_from_file, load_data_from_db
 from options.test_options import parse_args
 from utils.metrics import compute_error
@@ -42,31 +42,38 @@ def predict():
     prediction = np.concatenate(prediction)
     acc = compute_error(data_obj.test_y[args.seq_len + 1:, ...], prediction)
 
-    def write_res(gids, prediction, time):
-        """ write results to mongo db """
 
-        output_list = [{'gid': gid, 'pm25': round(prediction[i], 5)} for i, gid in enumerate(gids)]
-        document = {'timestamp': time, 'data': output_list}
-        utc_time = time.astimezone(pytz.timezone('UTC'))
-        collection_name = f'la_1000m_2021'
+def write_res():
+    """ write results to mongo db """
 
-        mongo_client = pymongo.MongoClient(MONGO_CONN_URI)
-        db = mongo_client['jonsnow']
-        collection = db[collection_name]
-        condition = {'timestamp': utc_time}
-        output = collection.find_one(condition)
+    # output_list = [{'gid': gid, 'pm25': round(prediction[i], 5)} for i, gid in enumerate(gids)]
+    output_list = [{'gid': 0, 'pm25': 0.0001}]
 
-        if output is not None:
-            collection.update_one(condition, {'$set': document})
-            print(f'{collection_name}: Overwrite {utc_time}')
-        else:
-            collection.insert_one(document)
-            print(f'{collection_name}: Insert {utc_time}')
+    from datetime import datetime
+    time = datetime.now().replace(microsecond=0)
+    document = {'timestamp': time, 'data': output_list}
+    utc_time = time.astimezone(pytz.timezone('UTC'))
+    collection_name = f'la_500m_2020'
 
-        mongo_client.close()
+    mongo_client = pymongo.MongoClient(MONGO_CONN_URI)
+    db = mongo_client['jonsnow']
+    collection = db[collection_name]
+    condition = {'timestamp': utc_time}
+    output = collection.find_one(condition)
+
+    if output is not None:
+        collection.update_one(condition, {'$set': document})
+        print(f'{collection_name}: Overwrite {utc_time}')
+    else:
+        collection.insert_one(document)
+        print(f'{collection_name}: Insert {utc_time}')
+
+    mongo_client.close()
 
 
 if __name__ == '__main__':
+
+    write_res()
 
     args = parse_args()
     device = torch.device(f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu')  # the gpu device
