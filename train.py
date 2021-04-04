@@ -64,7 +64,7 @@ def train():
             batch_val_y = construct_y(batch_idx, data_obj.val_y)
 
             """ start train """
-            out, _, _, de_x, em = model(batch_x)
+            out, sparse_x, _, de_x, em = model(batch_x)
             train_loss = mse_loss_func(batch_y[~torch.isnan(batch_y)], out[~torch.isnan(batch_y)])
             train_losses += train_loss.item()
 
@@ -76,7 +76,7 @@ def train():
                 total_loss += l1_loss * args.alpha
 
             if 'ae' in model_types:
-                ae_loss = model.sparse_layer.l1_loss()#mse_sum_loss_func(masked_x, de_x)
+                ae_loss = mse_sum_loss_func(sparse_x, de_x)
                 ae_losses += ae_loss.item()
                 total_loss += ae_loss * args.beta
 
