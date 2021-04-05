@@ -1,18 +1,23 @@
 import os
 import numpy as np
-import pymongo
-import pytz
 import torch
 import torch.utils.data as dat
+import pickle
+from paramiko import SSHClient
+from scp import SCPClient
+import paramiko
+from dotenv import load_dotenv
 
-from data_preprocessing.db_conn.common_db import MONGO_CONN_URI
+
 from scripts.data_loader import load_data_from_file, load_data_from_db
 from options.test_options import parse_args
 from utils.metrics import compute_error
 from models.deeplatte import DeepLatte
 
 
-def predict():
+load_dotenv('.env')
+
+def predict(mintime,maxtime):
     """ train """
 
     """ construct index-based data loader """
@@ -40,42 +45,39 @@ def predict():
             prediction.append(out.cpu().data.numpy())
 
     prediction = np.concatenate(prediction)
-    print((data_obj.test_y[args.seq_len + 1:, ...]>0).sum())
-    #print(prediction)
-    acc = compute_error(data_obj.test_y[args.seq_len + 1:, ...], prediction)
+    print((data_obj.label_mat[args.seq_len + 1:, ...]>0).sum())
+    print("Prediction: number of nonnan values: ",((prediction>0).sum()))
+    print("prediction shape",prediction.shape)
+    transfer_to_jonsnow(prediction,mintime,maxtime)
+    acc = compute_error(data_obj.label_mat[args.seq_len + 1:, ...], prediction)
+    print("acc: ",acc)
 
+def transfer_to_jonsnow(data,mintime,maxtime):
+   with open("result_to_jonsnow/data.pkl", "wb") as f:
+      pickle.dump(data, f)
 
-def write_res():
-    """ write results to mongo db """
+   ssh = SSHClient()
+   ssh.load_system_host_keys()
+   ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+   ssh.connect(hostname=os.getenv("SSH_HOST"), username=os.getenv("SSH_USER"), password=os.getenv("SSH_PWD"))
+   with SCPClient(ssh.get_transport()) as scp:
+      scp.put('data_preprocessing/data/los_angeles_1000m_grid_mat.npz',
+              'result_from_arya/los_angeles_1000m_grid_mat.npz')  # Copy my_file.txt to the server
+      scp.put('result_to_jonsnow/data.pkl','result_from_arya/data.pkl')
 
-    # output_list = [{'gid': gid, 'pm25': round(prediction[i], 5)} for i, gid in enumerate(gids)]
-    output_list = [{'gid': 0, 'pm25': 0.0001}]
-
-    from datetime import datetime
-    time = datetime.now().replace(microsecond=0)
-    document = {'timestamp': time, 'data': output_list}
-    utc_time = time.astimezone(pytz.timezone('UTC'))
-    collection_name = f'la_500m_2020'
-
-    mongo_client = pymongo.MongoClient(MONGO_CONN_URI)
-    db = mongo_client['jonsnow']
-    collection = db[collection_name]
-    condition = {'timestamp': utc_time}
-    output = collection.find_one(condition)
-
-    if output is not None:
-        collection.update_one(condition, {'$set': document})
-        print(f'{collection_name}: Overwrite {utc_time}')
-    else:
-        collection.insert_one(document)
-        print(f'{collection_name}: Insert {utc_time}')
-
-    mongo_client.close()
+   sin, out, err = ssh.exec_command(f"source activate test;python result_from_arya/saveToMongo.py {mintime} {maxtime}")
+   
+   err = err.readlines()
+   if err:
+      print("something wrong")
+      for i in err:
+        print(i)
+   os.remove("result_to_jonsnow/data.pkl")
 
 
 if __name__ == '__main__':
 
-    write_res()
+    #write_res()
 
     args = parse_args()
     device = torch.device(f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu')  # the gpu device
@@ -86,6 +88,7 @@ if __name__ == '__main__':
     else:
         data_obj = load_data_from_db(args)
 
+    #transfer_to_jonsnow(data_obj.label_mat,args.min_time,args.max_time)
     """ load model """
     model = DeepLatte(in_features=data_obj.num_features,
                       en_features=[int(i) for i in args.en_features.split(',')],
@@ -102,7 +105,5 @@ if __name__ == '__main__':
     model_file = os.path.join(args.model_path, args.model_name + '_from_db.pkl')
     model.load_state_dict(torch.load(model_file))
 
-    predict()
-
-
+    predict(args.min_time,args.max_time)
 

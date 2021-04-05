@@ -1,5 +1,6 @@
 import os
 import logging
+
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -7,6 +8,7 @@ from data_preprocessing.gen_train_data import gen_train_data
 
 
 class DataObj:
+
     def __init__(self, label_mat, dynamic_x, static_x,
                  dynamic_feature_names, static_feature_names,
                  mapping_mat, **kwargs):
@@ -14,11 +16,12 @@ class DataObj:
         self.label_mat = label_mat
         self.dynamic_x = self.norm(dynamic_x)
         self.static_x = self.norm(static_x)
-
+    
         self.dynamic_feature_names = dynamic_feature_names
         self.static_feature_names = static_feature_names
         self.features_names = dynamic_feature_names + static_feature_names
         self.mapping_mat = mapping_mat
+
         self.num_features = len(self.dynamic_feature_names) + len(self.static_feature_names)
         self.num_dynamic_features = len(self.dynamic_feature_names)
         self.num_static_features = len(self.static_feature_names)
@@ -28,6 +31,7 @@ class DataObj:
         self.use_test = kwargs.get('use_test', False)
         self.train_size = kwargs.get('train_size', 0.8)
         self.test_size = kwargs.get('test_size', 0.2) * self.use_test
+
         self.train_loc, self.val_loc, self.test_loc = self.split_train_val_test_locations()
         self.train_y = self.set_target_label_mat(self.train_loc)
         self.val_y = self.set_target_label_mat(self.val_loc)
@@ -44,7 +48,8 @@ class DataObj:
 
     def split_train_val_test_locations(self):
         """ split labeled locations into train, val, (test) set
-    return: train_loc, val_loc, test_loc -> list, list, list """
+
+        return: train_loc, val_loc, test_loc -> list, list, list """
 
         #  find locations that have more than 0.01 x num_times labels
         candidate_mat = np.sum(~np.isnan(self.label_mat), axis=(0, 1)) == self.num_times
@@ -66,6 +71,7 @@ class DataObj:
                 train, val = train_test_split(loc, train_size=self.train_size, random_state=1234)
             train_loc += train
             val_loc += val
+
         return sorted(train_loc), sorted(val_loc), sorted(test_loc)
 
     @staticmethod
@@ -78,8 +84,9 @@ class DataObj:
         norm_mat = np.moveaxis(norm_mat, -1, 1)  # shape: (num_times, num_features, num_rows, num_cols)
         return norm_mat
 
+
 def load_data_from_db(args):
-    data = gen_train_data(args.min_time, args.max_time, args.resolution, args.area)
+    data = gen_train_data(args.min_time,args.max_time,args.resolution,args.area)
     dynamic_feature_names, static_feature_names = list(data['dynamic_features']), list(data['static_features'])
     data_obj = DataObj(label_mat=data['label_mat'],
                        dynamic_x=data['dynamic_mat'],
@@ -87,12 +94,12 @@ def load_data_from_db(args):
                        dynamic_feature_names=dynamic_feature_names,
                        static_feature_names=static_feature_names,
                        mapping_mat=data['mapping_mat'])
-
+    
     return data_obj
 
 def load_data_from_file(data_path):
     """ load data from a file """
-
+    
     if not os.path.isfile(data_path):
         raise FileNotFoundError
 
@@ -106,15 +113,18 @@ def load_data_from_file(data_path):
                        mapping_mat=data['mapping_mat'])
     return data_obj
 
+
+
+
 def data_logging(data_obj):
     logging.info('Number of features = {}.'.format(data_obj.n_features))
     logging.info('Number of dynamic features = {}.'.format(data_obj.n_dynamic_features))
     logging.info('Number of static features = {}.'.format(data_obj.n_static_features))
     logging.info('Number of time points = {}.'.format(data_obj.n_times))
     logging.info('Shape of the matrix = ({}, {}).'.format(data_obj.n_rows, data_obj.n_cols))
-    logging.info(
-        'Number of given pm locations = {}.'.format(len(data_obj.train_loc + data_obj.val_loc + data_obj.test_loc)))
+    logging.info('Number of given pm locations = {}.'.format(len(data_obj.train_loc + data_obj.val_loc + data_obj.test_loc)))
     logging.info('Number of training locations = {}.'.format(len(data_obj.train_loc)))
     logging.info('Number of validation locations = {}.'.format(len(data_obj.val_loc)))
     logging.info('Number of testing locations = {}.'.format(len(data_obj.test_loc)))
 
+    

@@ -98,12 +98,13 @@ def gen_meo_vector(clima_obj, city_id, time_list, mapping_mat):
         .filter(clima_obj.c.timestamp <= max_time)
     meo_data = pd.read_sql(meo_data.statement, session.bind)
     meo_list = []
+    n_features=len(meo_data["data"].iloc[0])
     for t in time_list:
         this_data = meo_data[meo_data['timestamp'] == t]
         this_dict = dict(this_data[['gid', 'data']].values)
         # this_pm_grids = list(this_pm_data['ogc_fid'])
         # this_pm_data = np.array(this_pm_data['percentile_cont']).reshape((1, 1, -1))
-        this_mat = gen_grid_data(1, len(this_data["data"].iloc[0]), this_dict, mapping_mat)
+        this_mat = gen_grid_data(1, n_features, this_dict, mapping_mat)
         meo_list.append(this_mat)
     meo_mat = np.vstack(meo_list)
     print('The shape of PM matrix = {}.'.format(meo_mat.shape))

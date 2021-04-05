@@ -166,8 +166,8 @@ if __name__ == '__main__':
     else:
         data_obj = load_data_from_db(args)
 
-    print((data_obj.dynamic_x>0).sum())
-    pass
+    print((data_obj.label_mat>0).sum())
+    print(f"test_loc: {len(data_obj.test_loc)}")
     """ load model """
     model_types = args.model_types.split(',')
     model = DeepLatte(in_features=data_obj.num_features,
