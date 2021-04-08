@@ -84,7 +84,7 @@ class DataObj:
         return norm_mat
 
 def load_data_from_db(args):
-    data = gen_train_data(args.min_time, args.max_time, args.resolution, args.area)
+    data = gen_train_data(args.min_time, args.max_time, args.resolution, args.area,args.seq_len)
     dynamic_feature_names, static_feature_names = list(data['dynamic_features']), list(data['static_features'])
     data_obj = DataObj(label_mat=data['label_mat'],
                        dynamic_x=data['dynamic_mat'],

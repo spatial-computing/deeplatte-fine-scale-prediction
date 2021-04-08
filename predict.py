@@ -45,9 +45,6 @@ def predict(mintime,maxtime):
             prediction.append(out.cpu().data.numpy())
 
     prediction = np.concatenate(prediction)
-    print((data_obj.label_mat[args.seq_len + 1:, ...]>0).sum())
-    print("Prediction: number of nonnan values: ",((prediction>0).sum()))
-    print("prediction shape",prediction.shape)
     transfer_to_jonsnow(prediction,mintime,maxtime)
     acc = compute_error(data_obj.label_mat[args.seq_len + 1:, ...], prediction)
     print("acc: ",acc)
@@ -69,7 +66,7 @@ def transfer_to_jonsnow(data,mintime,maxtime):
    
    err = err.readlines()
    if err:
-      print("something wrong")
+      print("jonsnow part error")
       for i in err:
         print(i)
    os.remove("result_to_jonsnow/data.pkl")

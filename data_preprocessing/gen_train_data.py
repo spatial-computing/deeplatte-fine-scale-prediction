@@ -210,7 +210,7 @@ def check_mapping_mat_exist(filename, res, city, city_id):
         print(f'{filename} exists.')
 
 
-def gen_train_data(min_time, max_time, res=1000, city="los_angeles"):
+def gen_train_data(min_time, max_time, res=1000, city="los_angeles", seq_len=6):
     if city not in mapcity:
         exit("Please input correct city name")
     city_id = mapcity[city]
@@ -234,7 +234,7 @@ def gen_train_data(min_time, max_time, res=1000, city="los_angeles"):
     output["static_mat"] = static_mat
     output["static_features"] = geo_name_list
 
-    time_sections = generateTimeSection(min_time, max_time)
+    time_sections = generateTimeSection(min_time-timedelta(hours=seq_len+1), max_time)
 
     prevYear = None
     for ts in time_sections:
