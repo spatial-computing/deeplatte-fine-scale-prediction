@@ -165,9 +165,15 @@ if __name__ == '__main__':
         data_obj = load_data_from_file(args.data_path)
     else:
         data_obj = load_data_from_db(args)
-
-    print((data_obj.label_mat>0).sum())
-    print(f"test_loc: {len(data_obj.test_loc)}")
+    
+    if np.isnan(data_obj.dynamic_x).sum()>0:
+        logging.error("Meo data contains nan values.")
+        print("Meo data contains nan values.")
+        exit()
+    if len(data_obj.train_loc) == 0:
+        logging.error("Not enough training data.")
+        print("Not enough training data.")
+        exit()
     """ load model """
     model_types = args.model_types.split(',')
     model = DeepLatte(in_features=data_obj.num_features,

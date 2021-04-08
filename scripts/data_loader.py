@@ -47,8 +47,11 @@ class DataObj:
     return: train_loc, val_loc, test_loc -> list, list, list """
 
         #  find locations that have more than 0.01 x num_times labels
-        candidate_mat = np.sum(~np.isnan(self.label_mat), axis=(0, 1)) == self.num_times
-
+        candidate_mat = np.sum(~np.isnan(self.label_mat), axis=(0, 1)) >= self.num_times*0.5
+        print("0.5: ",(np.sum(~np.isnan(self.label_mat), axis=(0, 1)) >= self.num_times*0.5).sum())
+        
+        print("0.6: ",(np.sum(~np.isnan(self.label_mat), axis=(0, 1)) >= self.num_times*0.6).sum())
+        print("0.7: ",(np.sum(~np.isnan(self.label_mat), axis=(0, 1)) >= self.num_times*0.7).sum())
         sub_region_locations = [
             self.mapping_mat[np.where(candidate_mat[0:self.num_rows // 2, 0:self.num_cols // 2])].tolist(),
             self.mapping_mat[np.where(candidate_mat[0:self.num_rows // 2, self.num_cols // 2:])].tolist(),
@@ -58,6 +61,8 @@ class DataObj:
 
         train_loc, val_loc, test_loc = [], [], []
         for loc in sub_region_locations:
+            if len(loc)==0:
+                continue
             if self.use_test:
                 train, test = train_test_split(loc, test_size=self.test_size, random_state=1234)
                 train, val = train_test_split(train, train_size=self.train_size, random_state=1234)
